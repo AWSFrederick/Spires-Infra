@@ -1,0 +1,51 @@
+---
+aws_frederick:
+  public_hosted_zone: spiresexport.com
+  hosted_zone: spiresexport.dev
+  ec2:
+    instance_size: t2.small
+    ami_id: ami-24958sd
+    asg_size: 1
+boto:
+  aws_access_key_id:
+  aws_secret_access_key:
+  region_name: us-east-1
+global:
+  environment_name: aws-frederick
+  monitor_stack: false
+  print_debug: false
+  stack_outputs_directory: stack_outputs
+  write_stack_outputs: false
+logging:
+  cloudtrail_log_prefix: cloudtrail_logs
+  elb_log_prefix: elb_logs
+  s3_bucket: aws-frederick-logs
+nat:
+  enable_ntp: false
+  instance_type: t2.micro
+network:
+  az_count: 3
+  network_cidr_base: 10.0.0.0
+  network_cidr_size: '16'
+  subnet_config:
+  - name: public
+    size: '18'
+    type: public
+  - name: private
+    size: '22'
+    type: private
+  subnet_types:
+  - public
+  - private
+template:
+  ami_map_file: ami_cache.json
+  description: AWS Frederick Env
+  ec2_key_default: aws-frederick
+  include_dateGenerated_output: true
+  include_templateValidationHash_output: true
+  include_timestamp: true
+  s3_bucket: aws-frederick-templates
+  s3_prefix: templates
+  s3_upload: true
+  s3_upload_acl: public-read
+  timeout_in_minutes: '60'
