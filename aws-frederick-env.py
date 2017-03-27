@@ -76,11 +76,12 @@ class AWSFrederickEnv(NetworkBase):
 
         self.template._common_security_group = self.template.add_resource(
             ec2.SecurityGroup('commonSecurityGroup',
-                              GroupDescription='Security Group allows ingress and egress for common usage patterns throughout this deployed infrastructure.',
-                              VpcId=self.template.vpc_id,
-                              SecurityGroupEgress=security_group_rules,
-                              SecurityGroupIngress=[]
-                              )
+                GroupDescription='Security Group allows ingress and egress for \
+                common usage patterns throughout this deployed infrastructure.',
+                VpcId=self.template.vpc_id,
+                SecurityGroupEgress=security_group_rules,
+                SecurityGroupIngress=[]
+                )
         )
 
         aws_frederick_ec2_template = AWSFrederickEC2Template(

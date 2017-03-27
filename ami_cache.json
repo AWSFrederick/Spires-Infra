@@ -1,9 +1,9 @@
 {
     "us-east-1": {
-        "natAmiId": "ami-4f9fee26",
+        "natAmiId": "ami-31962127",
         "centOS65AmiId": "ami-8997afe0",
         "ubuntu1404LtsAmiId": "ami-018c9568",
-        "amazonLinuxAmiId": "ami-0d4cfd66"
+        "amazonLinuxAmiId": "ami-0b33d91d"
     },
     "ap-northeast-1": {
         "natAmiId": "ami-5f840e5e",

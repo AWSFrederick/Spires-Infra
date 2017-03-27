@@ -1167,33 +1167,6 @@ class AWSFrederickCommonTemplate(Template):
             )
         )
 
-    def add_ecr_policy_text_allow_prod(self):
-        return(
-            Policy(
-                Version='2008-10-17',
-                Statement=[
-                    Statement(
-                        Sid='AllowPull',
-                        Effect=Allow,
-                        Principal=AWSPrincipal([
-                            awacs.iam.ARN(account='988006926515', resource='root'),
-                        ]),
-                        Action=[
-                            ecr.GetDownloadUrlForLayer,
-                            ecr.BatchGetImage,
-                            ecr.BatchCheckLayerAvailability,
-                            ecr.PutImage,
-                            ecr.InitiateLayerUpload,
-                            ecr.UploadLayerPart,
-                            ecr.CompleteLayerUpload,
-                            ecr.BatchDeleteImage,
-                            ecr.ListImages
-                        ],
-                    ),
-                ]
-            )
-        )
-
     def add_container_def(self, container):
         return ecs.ContainerDefinition(
             Image=container['Image'],

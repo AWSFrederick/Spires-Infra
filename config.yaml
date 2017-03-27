@@ -4,7 +4,7 @@ aws_frederick:
   hosted_zone: spiresexport.dev
   ec2:
     instance_size: t2.small
-    ami_id: ami-24958sd
+    ami_id: amazonLinuxAmiId
     asg_size: 1
 boto:
   aws_access_key_id:

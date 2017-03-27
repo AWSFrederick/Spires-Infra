@@ -1,7 +1,6 @@
 from aws_frederick_common import AWSFrederickCommonTemplate
-from troposphere import Ref, GetAtt, Base64, Join, Output
+from troposphere import Ref, GetAtt, Base64, Join, Output, Template
 from troposphere.policies import UpdatePolicy, AutoScalingRollingUpdate
-import troposphere.ecs as ecs
 import troposphere.elasticloadbalancing as elb
 import troposphere.constants as tpc
 import troposphere.autoscaling as autoscaling
@@ -66,8 +65,17 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
 
         name = self.env_name.replace('-', '')
 
-        #
-        ecs_cluster_asg = self.add_asg(
+        public_elb = self.add_elb("ELB",
+             [
+                elb.Listener(
+                    LoadBalancerPort="80",
+                    InstancePort=5000,
+                    Protocol="HTTP",
+                ),
+            ],
+            security_groups=[self.public_lb_security_group])
+
+        asg = self.add_asg(
             "EC2",
             min_size=asg_size,
             max_size=6,
@@ -75,7 +83,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             #instance_profile=self.add_instance_profile(name + 'ECS', policies_for_profile, name + 'ECS'),
             instance_type=instance_type,
             security_groups=['commonSecurityGroup', Ref(self.internal_security_group)],
-            subnet_layer='public',
+            subnet_layer='private',
             update_policy=UpdatePolicy(
                 AutoScalingRollingUpdate=AutoScalingRollingUpdate(
                     PauseTime='PT5M',
@@ -90,9 +98,11 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                 'yum install python27-pip -y\n',
                 'wget https://raw.githubusercontent.com/AWSFrederick/Spires-Export/master/flask-app/requirements.txt\n',
                 'wget https://raw.githubusercontent.com/AWSFrederick/Spires-Export/master/flask-app/app.py\n',
+                'virtualenv env\n',
+                'source /env/bin/activate\n',
                 'pip install -r requirements.txt\n',
                 'export FLASK_APP=app.py\n',
-                'flask run\n',
+                'flask run -h 0.0.0.0\n',
             ])),
             ebs_data_volumes=[{'name': '/dev/sds', 'size': '100', 'type': 'gp2', 'delete_on_termination': True, 'volume_type': 'gp2'}]
         )
