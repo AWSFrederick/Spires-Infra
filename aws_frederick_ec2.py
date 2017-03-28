@@ -65,14 +65,19 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
 
         name = self.env_name.replace('-', '')
 
+
+        #    elb.Listener(
+        #        LoadBalancerPort="80",
+        #        InstancePort=5000,
+        #        Protocol="HTTP",
+        #    ),
+            #  elb_port - The port of the incoming connection to the ELB
+            # elb_protocol (optional) - The protocol of the incoming connection to the ELB (i.e., 'HTTP', 'HTTPS', 'TCP', 'SSL')
+            # instance_port (optional) - The port of the incoming connection to the instances
+
+
         public_elb = self.add_elb("ELB",
-             [
-                elb.Listener(
-                    LoadBalancerPort="80",
-                    InstancePort=5000,
-                    Protocol="HTTP",
-                ),
-            ],
+             [{'elb_port': 80, 'elb_protocol': 'HTTP', 'instance_port': 5000}],
             security_groups=[self.public_lb_security_group])
 
         asg = self.add_asg(
