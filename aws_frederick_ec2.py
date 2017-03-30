@@ -66,18 +66,11 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
         name = self.env_name.replace('-', '')
 
 
-        #    elb.Listener(
-        #        LoadBalancerPort="80",
-        #        InstancePort=5000,
-        #        Protocol="HTTP",
-        #    ),
-            #  elb_port - The port of the incoming connection to the ELB
-            # elb_protocol (optional) - The protocol of the incoming connection to the ELB (i.e., 'HTTP', 'HTTPS', 'TCP', 'SSL')
-            # instance_port (optional) - The port of the incoming connection to the instances
-
-
         public_elb = self.add_elb("ELB",
-             [{'elb_port': 80, 'elb_protocol': 'HTTP', 'instance_port': 5000}],
+            [{'elb_port': 80, 'elb_protocol': 'HTTP', 'instance_port': 5000}],
+            health_check_protocol='HTTP',
+            health_check_port=5000,
+            health_check_path='/status',
             security_groups=[self.public_lb_security_group])
 
         asg = self.add_asg(
@@ -85,6 +78,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             min_size=asg_size,
             max_size=6,
             ami_name=ami_name,
+            load_balancer=public_elb,
             #instance_profile=self.add_instance_profile(name + 'ECS', policies_for_profile, name + 'ECS'),
             instance_type=instance_type,
             security_groups=['commonSecurityGroup', Ref(self.internal_security_group)],
@@ -101,13 +95,14 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             user_data=Base64(Join('', [
                 '#!/bin/bash\n',
                 'yum install python27-pip -y\n',
-                'wget https://raw.githubusercontent.com/AWSFrederick/Spires-Export/master/flask-app/requirements.txt\n',
-                'wget https://raw.githubusercontent.com/AWSFrederick/Spires-Export/master/flask-app/app.py\n',
+                'wget https://raw.githubusercontent.com/AWSFrederick/Spires-Export/master/bottle-app/requirements.txt\n',
+                'wget https://raw.githubusercontent.com/AWSFrederick/Spires-Export/master/bottle-app/app.py\n',
                 'virtualenv env\n',
                 'source /env/bin/activate\n',
                 'pip install -r requirements.txt\n',
-                'export FLASK_APP=app.py\n',
-                'flask run -h 0.0.0.0\n',
+                'python app.py\n',
+                #'export FLASK_APP=app.py\n',
+                #'flask run -h 0.0.0.0\n',
             ])),
             ebs_data_volumes=[{'name': '/dev/sds', 'size': '100', 'type': 'gp2', 'delete_on_termination': True, 'volume_type': 'gp2'}]
         )
