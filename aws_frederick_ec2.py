@@ -52,7 +52,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             "Security Group for EC2",
             'vpcId',
             cidr,
-            [{"5000": "5000"}]
+            [{"80": "80"}]
         )
 
         self.public_lb_security_group = self.add_sg_with_cidr_port_list(
@@ -67,10 +67,10 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
 
 
         public_elb = self.add_elb("ELB",
-            [{'elb_port': 80, 'elb_protocol': 'HTTP', 'instance_port': 5000}],
+            [{'elb_port': 80, 'elb_protocol': 'HTTP', 'instance_port': 80}],
             health_check_protocol='HTTP',
-            health_check_port=5000,
-            health_check_path='/status',
+            health_check_port=80,
+            health_check_path='/',
             security_groups=[self.public_lb_security_group])
 
         asg = self.add_asg(
@@ -94,15 +94,15 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             ),
             user_data=Base64(Join('', [
                 '#!/bin/bash\n',
-                'yum install python27-pip -y\n',
-                'wget https://raw.githubusercontent.com/AWSFrederick/Spires-Export/master/bottle-app/requirements.txt\n',
-                'wget https://raw.githubusercontent.com/AWSFrederick/Spires-Export/master/bottle-app/app.py\n',
+                'yum install python27-pip git nginx -y\n',
+                'service nginx start\n'
+                'git clone https://github.com/AWSFrederick/Spires-backend.git app\n',
+                'cd app\n',
                 'virtualenv env\n',
-                'source /env/bin/activate\n',
+                'source ./env/bin/activate\n',
                 'pip install -r requirements.txt\n',
-                'python app.py\n',
-                #'export FLASK_APP=app.py\n',
-                #'flask run -h 0.0.0.0\n',
+                'python manage.py migrate\n',
+                'gunicorn spires.wsgi:application -b 0.0.0.0:5000 --keep-alive 60\n',
             ])),
             ebs_data_volumes=[{'name': '/dev/sds', 'size': '100', 'type': 'gp2', 'delete_on_termination': True, 'volume_type': 'gp2'}]
         )
