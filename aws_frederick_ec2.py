@@ -98,6 +98,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                 'service nginx start\n'
                 'git clone https://github.com/AWSFrederick/Spires-backend.git app\n',
                 'cd app\n',
+                'mv awsfred.conf /etc/nginx/conf.d/awsfred.conf\n',
                 'virtualenv env\n',
                 'source ./env/bin/activate\n',
                 'pip install -r requirements.txt\n',
