@@ -65,13 +65,15 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
 
         name = self.env_name.replace('-', '')
 
-
+        ## Todo: add elb to dns for awsfred.patrickpierson.us
         public_elb = self.add_elb("ELB",
             [{'elb_port': 80, 'elb_protocol': 'HTTP', 'instance_port': 80}],
             health_check_protocol='HTTP',
             health_check_port=80,
             health_check_path='/',
             security_groups=[self.public_lb_security_group])
+
+        public_dns = self.add_elb_dns_alias(public_elb, '', 'awsfred.patrickpierson.us.')
 
         asg = self.add_asg(
             "EC2",
@@ -95,15 +97,15 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             user_data=Base64(Join('', [
                 '#!/bin/bash\n',
                 'yum install python27-pip git nginx -y\n',
-                'service nginx start\n'
                 'git clone https://github.com/AWSFrederick/Spires-backend.git app\n',
                 'cd app\n',
                 'mv awsfred.conf /etc/nginx/conf.d/awsfred.conf\n',
+                'service nginx start\n'
                 'virtualenv env\n',
                 'source ./env/bin/activate\n',
                 'pip install -r requirements.txt\n',
                 'python manage.py migrate\n',
-                'gunicorn spires.wsgi:application -b 0.0.0.0:5000 --keep-alive 60\n',
+                'gunicorn spires.wsgi:application -b 0.0.0.0:5000 --keep-alive 60 &\n',
             ])),
             ebs_data_volumes=[{'name': '/dev/sds', 'size': '100', 'type': 'gp2', 'delete_on_termination': True, 'volume_type': 'gp2'}]
         )
