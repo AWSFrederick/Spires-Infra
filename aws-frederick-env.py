@@ -15,6 +15,7 @@ Options:
 
 from environmentbase.networkbase import NetworkBase
 from aws_frederick_ec2 import AWSFrederickEC2Template
+from aws_frederick_rds import AWSFrederickRdsTemplate
 import troposphere.ec2 as ec2
 import boto.vpc
 import boto
@@ -84,14 +85,25 @@ class AWSFrederickEnv(NetworkBase):
                 )
         )
 
-        aws_frederick_ec2_template = AWSFrederickEC2Template(
-            env_name,
-            region,
-            cidr_range,
-            aws_frederick_config
-        )
+        if self.config.get('aws_frederick').get('rds'):
+            aws_frederick_rds_template = AWSFrederickRdsTemplate(
+                env_name,
+                region,
+                cidr_range,
+                aws_frederick_config
+            )
 
-        self.add_child_template(aws_frederick_ec2_template)
+            self.add_child_template(aws_frederick_rds_template)
+
+        if self.config.get('aws_frederick').get('ec2'):
+            aws_frederick_ec2_template = AWSFrederickEC2Template(
+                env_name,
+                region,
+                cidr_range,
+                aws_frederick_config
+            )
+
+            self.add_child_template(aws_frederick_ec2_template)
 
 if __name__ == '__main__':
     AWSFrederickEnv()

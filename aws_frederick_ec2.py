@@ -8,7 +8,7 @@ import troposphere.cloudwatch as cloudwatch
 
 class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
     """
-    Enhances basic template by providing ion channel EC2 resources
+    Enhances basic template by providing AWS Frederick EC2 resources
     """
 
     # Collect all the values we need to assemble our SuperBowlOnARoll stack
@@ -21,7 +21,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
         self.config = aws_frederick_config
 
     def build_hook(self):
-        print "Building Template for Ion Channel EC2"
+        print "Building Template for AWS Frederick EC2"
 
         hosted_zone_name = self.config.get('hosted_zone')
         ec2_config = self.config.get('ec2')
