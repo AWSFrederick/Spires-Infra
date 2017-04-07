@@ -6,6 +6,11 @@ aws_frederick:
     instance_size: t2.small
     ami_id: amazonLinuxAmiId
     asg_size: 1
+  buckets:
+    - name: map.awsfred.patrickpierson.us
+      static_site: true
+      route53: true
+      access_control: PublicRead
   # rds:
   #   - name: "database"
   #     engine: "postgres"
