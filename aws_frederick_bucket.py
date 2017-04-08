@@ -1,5 +1,10 @@
 from aws_frederick_common import AWSFrederickCommonTemplate
-
+from troposphere import GetAtt, Join, Output
+from troposphere import Parameter, Ref, Template
+from troposphere.cloudfront import Distribution, DistributionConfig
+from troposphere.cloudfront import Origin, DefaultCacheBehavior
+from troposphere.cloudfront import ForwardedValues
+from troposphere.cloudfront import S3Origin
 
 class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
     """
@@ -23,8 +28,6 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
 
         if buckets is not None:
             for bucket in buckets:
-                if ".prod" in hosted_zone_name:
-                    public_hosted_zone_name = bucket.get('name') + "."
                 self.add_bucket(
                     bucket.get('name'),
                     bucket.get('access_control'),
@@ -32,3 +35,27 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
                     bucket.get('route53'),
                     public_hosted_zone_name,
                 )
+                if bucket.get('static_site'):
+                    self.add_resource(Distribution(bucket.get('name').replace('.',''),
+                        DistributionConfig=DistributionConfig(
+                            Aliases=[bucket.get('name')],
+                            DefaultRootObject='index.html',
+                            Origins=[Origin(Id="Origin 1",
+                                DomainName=bucket.get('name') + '.s3.amazonaws.com',
+                                S3OriginConfig=S3Origin())],
+                            DefaultCacheBehavior=DefaultCacheBehavior(
+                                TargetOriginId="Origin 1",
+                                ForwardedValues=ForwardedValues(
+                                    QueryString=False),
+                                ViewerProtocolPolicy="allow-all"),
+                            Enabled=True,
+                            HttpVersion='http2')))
+                    # todo: ipv6
+
+                    # todo: dns alias for cloudfront 
+                    # self.add_dns_alias(
+                    #     name,
+                    #     "s3-website-us-east-1.amazonaws.com",
+                    #     "Z2FDTNDATAQYW2",
+                    #     public_hosted_zone
+                    # )

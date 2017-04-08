@@ -9,8 +9,9 @@ aws_frederick:
   buckets:
     - name: map.awsfred.patrickpierson.us
       static_site: true
-      route53: true
+      route53: false
       access_control: PublicRead
+      cloudfront: true
   # rds:
   #   - name: "database"
   #     engine: "postgres"
