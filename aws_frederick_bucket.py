@@ -51,8 +51,8 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
                             Enabled=True,
                             HttpVersion='http2')))
                     # todo: ipv6
-
-                    # todo: dns alias for cloudfront 
+                    # todo: ssl cert via acm
+                    # todo: dns alias for cloudfront
                     # self.add_dns_alias(
                     #     name,
                     #     "s3-website-us-east-1.amazonaws.com",
