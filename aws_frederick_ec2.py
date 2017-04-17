@@ -73,7 +73,11 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             health_check_path='/',
             security_groups=[self.public_lb_security_group])
 
-        public_dns = self.add_elb_dns_alias(public_elb, '', 'awsfred.patrickpierson.us.')
+        public_dns = self.add_elb_dns_alias(public_elb, 'api', 'mapfrederick.city.')
+
+        # Add policies
+        policies = ['cloudwatchlogs']
+        policies_for_profile = [self.get_policy(policy, 'EC2') for policy in policies]
 
         asg = self.add_asg(
             "EC2",
@@ -81,7 +85,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             max_size=6,
             ami_name=ami_name,
             load_balancer=public_elb,
-            #instance_profile=self.add_instance_profile(name + 'ECS', policies_for_profile, name + 'ECS'),
+            instance_profile=self.add_instance_profile(name, policies_for_profile, name),
             instance_type=instance_type,
             security_groups=['commonSecurityGroup', Ref(self.internal_security_group)],
             subnet_layer='private',
@@ -96,7 +100,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             ),
             user_data=Base64(Join('', [
                 '#!/bin/bash\n',
-                'yum install python27-pip git nginx -y\n',
+                'yum install python27-pip git nginx awslogs -y\n',
                 'git clone https://github.com/AWSFrederick/Spires-backend.git app\n',
                 'cd app\n',
                 'mv awsfred.conf /etc/nginx/conf.d/awsfred.conf\n',

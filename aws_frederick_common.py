@@ -174,6 +174,21 @@ class AWSFrederickCommonTemplate(Template):
                     }]
                 }
             ),
+            'cloudwatchlogs': iam.Policy(
+                PolicyName='cloudwatchlogs',
+                PolicyDocument={
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Action": [
+                            "logs:CreateLogGroup",
+                            "logs:CreateLogStream",
+                            "logs:PutLogEvents",
+                            "logs:DescribeLogStreams"
+                        ],
+                        "Resource": "*"
+                    }]
+                }
+            ),
             'autoscaling_ecs': iam.Policy(
                 PolicyName='service-autoscaling',
                 PolicyDocument={

@@ -1,13 +1,13 @@
 ---
 aws_frederick:
-  public_hosted_zone: awsfred.patrickpierson.us.
-  hosted_zone: awsfred.patrickpierson.us.
+  public_hosted_zone: mapfrederick.city.
+  hosted_zone: mapfrederick.city.
   ec2:
     instance_size: t2.small
     ami_id: amazonLinuxAmiId
     asg_size: 1
   buckets:
-    - name: map.awsfred.patrickpierson.us
+    - name: www.mapfrederick.city
       static_site: true
       route53: false
       access_control: PublicRead

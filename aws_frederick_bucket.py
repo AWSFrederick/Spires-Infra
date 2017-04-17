@@ -5,6 +5,8 @@ from troposphere.cloudfront import Distribution, DistributionConfig
 from troposphere.cloudfront import Origin, DefaultCacheBehavior
 from troposphere.cloudfront import ForwardedValues
 from troposphere.cloudfront import S3Origin
+from troposphere.route53 import AliasTarget, RecordSetGroup, RecordSet
+
 
 class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
     """
@@ -36,7 +38,7 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
                     public_hosted_zone_name,
                 )
                 if bucket.get('static_site'):
-                    self.add_resource(Distribution(bucket.get('name').replace('.',''),
+                    cloudfront = self.add_resource(Distribution(bucket.get('name').replace('.',''),
                         DistributionConfig=DistributionConfig(
                             Aliases=[bucket.get('name')],
                             DefaultRootObject='index.html',
@@ -50,12 +52,22 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
                                 ViewerProtocolPolicy="allow-all"),
                             Enabled=True,
                             HttpVersion='http2')))
-                    # todo: ipv6
+                    # todo: ipv6 - cloudformation not supported
                     # todo: ssl cert via acm
                     # todo: dns alias for cloudfront
-                    # self.add_dns_alias(
-                    #     name,
-                    #     "s3-website-us-east-1.amazonaws.com",
-                    #     "Z2FDTNDATAQYW2",
-                    #     public_hosted_zone
-                    # )
+                    #"Z2FDTNDATAQYW2"
+                #     self.add_resource(RecordSetGroup(
+                #         "cloudfrontroute53",
+                #         HostedZoneName=public_hosted_zone_name,
+                #         RecordSets=[
+                #             RecordSet(
+                #                 Name=bucket.get('name'),
+                #                 Type="A",
+                #                 AliasTarget=AliasTarget(
+                #                     "Z2FDTNDATAQYW2",
+                #                     Ref(cloudfront)
+                #                 ),
+                #             ),
+                #         ],
+                #     )
+                # )
