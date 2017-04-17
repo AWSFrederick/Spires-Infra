@@ -12,6 +12,10 @@ aws_frederick:
       route53: false
       access_control: PublicRead
       cloudfront: true
+    - name: files.mapfrederick.city
+      static_site: true
+      route53: true
+      access_control: PublicRead
   # rds:
   #   - name: "database"
   #     engine: "postgres"

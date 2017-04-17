@@ -37,7 +37,7 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
                     bucket.get('route53'),
                     public_hosted_zone_name,
                 )
-                if bucket.get('static_site'):
+                if bucket.get('cloudfront'):
                     cloudfront = self.add_resource(Distribution(bucket.get('name').replace('.',''),
                         DistributionConfig=DistributionConfig(
                             Aliases=[bucket.get('name')],
