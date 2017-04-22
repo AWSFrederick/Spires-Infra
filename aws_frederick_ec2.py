@@ -100,7 +100,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             ),
             user_data=Base64(Join('', [
                 '#!/bin/bash\n',
-                'yum install python27-pip git nginx awslogs -y\n',
+                'yum install python27-pip git nginx awslogs gcc python27-devel postgresql95-devel -y\n',
                 'wget https://s3.amazonaws.com/files.mapfrederick.city/awslogs-append.conf\n',
                 'cat awslogs-append.conf >> /etc/awslogs/awslogs.conf\n',
                 'service awslogs start\n',
