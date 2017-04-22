@@ -16,14 +16,14 @@ aws_frederick:
       static_site: true
       route53: true
       access_control: PublicRead
-  # rds:
-  #   - name: "database"
-  #     engine: "postgres"
-  #     username: "awsfred"
-  #     password: "AQEDAHjszbs5uVI7m3fRML/qYWtXh+qnvbk26YIhu4jHW5ZWKQAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDDTE+oRHWJKifyQioAIBEIA72gvETU8aFiS3EavIVxuZEVel9JRQzw6WjPl4niL799qJBsFOBZkZQGo1K7gfIeywv33LieubvfjKUpY="
-  #     storage: "15"
-  #     db_instance_type: "db.t2.micro"
-  #     multiaz: False
+  rds:
+    - name: "database"
+      engine: "postgres"
+      username: "awsfred"
+      password: "AQEDAHjszbs5uVI7m3fRML/qYWtXh+qnvbk26YIhu4jHW5ZWKQAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDDTE+oRHWJKifyQioAIBEIA72gvETU8aFiS3EavIVxuZEVel9JRQzw6WjPl4niL799qJBsFOBZkZQGo1K7gfIeywv33LieubvfjKUpY="
+      storage: "15"
+      db_instance_type: "db.t2.micro"
+      multiaz: False
 boto:
   aws_access_key_id:
   aws_secret_access_key:
