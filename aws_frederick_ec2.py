@@ -114,6 +114,32 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                 'pip install -r requirements.txt\n',
                 'python manage.py migrate\n',
                 'gunicorn spires.wsgi:application -b 0.0.0.0:5000 --keep-alive 60 &\n',
-            ])),
-            ebs_data_volumes=[{'name': '/dev/sds', 'size': '100', 'type': 'gp2', 'delete_on_termination': True, 'volume_type': 'gp2'}]
+            ])))
+
+        # Cluster Memory Scaling policies
+        asg_scale_up_policy = self.add_resource(
+            autoscaling.ScalingPolicy(
+                name + 'ScaleUpPolicy',
+                AdjustmentType='ChangeInCapacity',
+                AutoScalingGroupName=Ref(asg),
+                Cooldown=300,
+                ScalingAdjustment=1
+            )
+        )
+
+        # ELB latency above a threshold
+        self.add_resource(
+            cloudwatch.Alarm(
+                name + 'LatencyHigh',
+                MetricName='Latency',
+                ComparisonOperator='GreaterThanThreshold',
+                Period=300,
+                EvaluationPeriods=1,
+                Statistic='Average',
+                Namespace='AWS/ELB',
+                AlarmDescription=name + 'LatencyHigh',
+                Dimensions=[cloudwatch.MetricDimension(Name='LoadBalancerName', Value=Ref(public_elb))],
+                Threshold='2',
+                AlarmActions=[Ref(asg_scale_up_policy)]
+            )
         )
