@@ -6,6 +6,7 @@ import troposphere.constants as tpc
 import troposphere.autoscaling as autoscaling
 import troposphere.cloudwatch as cloudwatch
 
+
 class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
     """
     Enhances basic template by providing AWS Frederick EC2 resources
@@ -60,18 +61,27 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             "Security Group for accessing EC2 publicly",
             'vpcId',
             '0.0.0.0/0',
-            [{"80": "80"}]
+            [{"443": "443"}]
         )
 
         name = self.env_name.replace('-', '')
 
         ## Todo: add elb to dns for awsfred.patrickpierson.us
         public_elb = self.add_elb("ELB",
-            [{'elb_port': 80, 'elb_protocol': 'HTTP', 'instance_port': 80}],
+            [
+              {
+                'elb_port': 443,
+                'elb_protocol': 'HTTPS',
+                'instance_port': 80,
+                'instance_protocol': 'HTTP'
+              }
+            ],
             health_check_protocol='HTTP',
             health_check_port=80,
             health_check_path='/',
             security_groups=[self.public_lb_security_group])
+
+        public_elb.Listeners[0].SSLCertificateId = 'arn:aws:acm:us-east-1:422548007577:certificate/4d2f2450-7616-4daa-b7ed-c1fd2d53df90'
 
         public_dns = self.add_elb_dns_alias(public_elb, 'api', 'mapfrederick.city.')
 
@@ -140,6 +150,9 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                 AlarmDescription=name + 'LatencyHigh',
                 Dimensions=[cloudwatch.MetricDimension(Name='LoadBalancerName', Value=Ref(public_elb))],
                 Threshold='2',
-                AlarmActions=[Ref(asg_scale_up_policy)]
+                AlarmActions=[
+                  Ref(asg_scale_up_policy),
+                  'arn:aws:sns:us-east-1:422548007577:notify-pat'
+                ]
             )
         )

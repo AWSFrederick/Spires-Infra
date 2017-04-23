@@ -5,6 +5,7 @@ from troposphere.cloudfront import Distribution, DistributionConfig
 from troposphere.cloudfront import Origin, DefaultCacheBehavior
 from troposphere.cloudfront import ForwardedValues
 from troposphere.cloudfront import S3Origin
+from troposphere.cloudfront import ViewerCertificate
 from troposphere.route53 import AliasTarget, RecordSetGroup, RecordSet
 
 
@@ -43,15 +44,19 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
                             Aliases=[bucket.get('name')],
                             DefaultRootObject='index.html',
                             Origins=[Origin(Id="Origin 1",
-                                DomainName=bucket.get('name') + '.s3.amazonaws.com',
-                                S3OriginConfig=S3Origin())],
+                            DomainName=bucket.get('name') + '.s3.amazonaws.com',
+                            S3OriginConfig=S3Origin())],
                             DefaultCacheBehavior=DefaultCacheBehavior(
                                 TargetOriginId="Origin 1",
                                 ForwardedValues=ForwardedValues(
                                     QueryString=False),
-                                ViewerProtocolPolicy="allow-all"),
+                                    ViewerProtocolPolicy="redirect-to-https"),
                             Enabled=True,
-                            HttpVersion='http2')))
+                            HttpVersion='http2',
+                            ViewerCertificate=ViewerCertificate(
+                                AcmCertificateArn='arn:aws:acm:us-east-1:422548007577:certificate/4d2f2450-7616-4daa-b7ed-c1fd2d53df90',
+                                SslSupportMethod='sni-only'
+                            ))))
                     # todo: ipv6 - cloudformation not supported
                     # todo: ssl cert via acm
                     # todo: dns alias for cloudfront
