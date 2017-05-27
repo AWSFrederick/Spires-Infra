@@ -16,11 +16,6 @@ aws_frederick:
       static_site: true
       route53: true
       access_control: PublicRead
-    - name: maint.mapfrederick.city
-      static_site: true
-      route53: true
-      access_control: PublicRead
-      cloudfront: true
   rds:
     - name: "database"
       engine: "postgres"
