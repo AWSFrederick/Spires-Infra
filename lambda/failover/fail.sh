@@ -1,0 +1,1 @@
+aws cloudwatch set-alarm-state --alarm-name api-mapfrederick-city-awsroute53-8046907e-ed54-4a07-b977-0f2f17a13f74-Low-HealthCheckStatus --state-value ALARM --state-reason 'TestingFail' --profile aws-frederick
