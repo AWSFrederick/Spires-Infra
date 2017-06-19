@@ -149,7 +149,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                 Namespace='AWS/ELB',
                 AlarmDescription=name + 'LatencyHigh',
                 Dimensions=[cloudwatch.MetricDimension(Name='LoadBalancerName', Value=Ref(public_elb))],
-                Threshold='2',
+                Threshold='6',
                 AlarmActions=[
                   Ref(asg_scale_up_policy),
                   'arn:aws:sns:us-east-1:422548007577:notify-pat'
