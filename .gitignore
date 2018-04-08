@@ -1,0 +1,5 @@
+.venv
+.git
+templates/*
+AWS_Frederick.egg-info
+*.pyc

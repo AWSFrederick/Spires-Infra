@@ -68,9 +68,19 @@ class AWSFrederickRdsTemplate(AWSFrederickCommonTemplate):
         if engine == 'postgres':
             rds_port = 5432
             family = 'postgres9.5'
+            group_parameters = {
+                'rds.force_ssl': '1',
+                'log_min_duration_statement': '100',
+                'log_statement': 'all'
+            }
         if engine == 'MySQL':
             rds_port = 3306
             family = 'mysql5.1'
+            group_parameters = {}
+        if engine == 'mariadb':
+            rds_port = 3306
+            family = 'mariadb10.1'
+            group_parameters = {}
 
         rds_security_group = self.add_simple_sg_with_cidr(name, 'RDSSecurityGroup' + name, 'vpcId', cidr, rds_port, rds_port, 'tcp')
 
@@ -79,11 +89,7 @@ class AWSFrederickRdsTemplate(AWSFrederickCommonTemplate):
                 'RDSParameterGroup' + name,
                 Description='%s DB Parameter Group' % name,
                 Family=family,
-                Parameters={
-                    'rds.force_ssl': '1',
-                    'log_min_duration_statement': '100',
-                    'log_statement': 'all'
-                }
+                Parameters=group_parameters
             )
         )
 
@@ -94,8 +100,8 @@ class AWSFrederickRdsTemplate(AWSFrederickCommonTemplate):
 
         client = boto3.client('kms')
         response = client.decrypt(CiphertextBlob=base64.b64decode(password))
-        password = base64.b64encode(response['Plaintext'])
-
+        password = response['Plaintext']
+        print('Master Password is: %s' % password)
         rds_database = self.add_rds_database(name, engine, username, password, storage,
                                              db_instance_type, rds_subnet_group, rds_security_group,
                                              multiaz, rds_parameter_group, encrypt)
