@@ -1,7 +1,7 @@
 ---
 aws_frederick:
-  public_hosted_zone: files.mapfrederick.city.
-  hosted_zone: files.mapfrederick.city.
+  public_hosted_zone: filesharefrederick.net.
+  hosted_zone: filesharefrederick.net.
   ec2:
    instance_size: t2.medium
    ami_id: amazonLinuxAmiId
