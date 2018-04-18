@@ -14,4 +14,4 @@ Deploy:
 #### 2017
 > export AWS_PROFILE=aws-frederick
 
-> python aws-frederick-env.py create --config-file config.yaml
+> python aws-frederick-env.py create --config-file 2017-config.yaml
