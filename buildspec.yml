@@ -6,7 +6,7 @@ phases:
       - python setup.py develop
   build:
     commands:
-      - python aws-frederick-env.py create --config-file config.yaml
+      - python aws-frederick-env.py create --config-file 2018-config.yaml
   post_build:
     commands:
-      - python aws-frederick-env.py deploy --config-file config.yaml
+      - python aws-frederick-env.py deploy --config-file 2018-config.yaml
