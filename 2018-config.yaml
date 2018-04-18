@@ -2,6 +2,11 @@
 aws_frederick:
   public_hosted_zone: filesharefrederick.net.
   hosted_zone: filesharefrederick.net.
+  simple_ads:
+    - name: filesharefrederick
+      shortname: fsfred
+      password: "AQECAHjszbs5uVI7m3fRML/qYWtXh+qnvbk26YIhu4jHW5ZWKQAAAHYwdAYJKoZIhvcNAQcGoGcwZQIBADBgBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDGkRy0De0vLwwoay+QIBEIAzeOEbABBX4hk8mCu5EhHyHvJRbumFUeWrcbIYYZ1qPpjkp9c99be2lPxwsh1q8KUdI1Ws"
+      size: Small
   ec2:
    instance_size: t2.medium
    ami_id: amazonLinuxAmiId

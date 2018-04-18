@@ -17,6 +17,7 @@ from environmentbase.networkbase import NetworkBase
 from aws_frederick_ec2 import AWSFrederickEC2Template
 from aws_frederick_rds import AWSFrederickRdsTemplate
 from aws_frederick_bucket import AWSFrederickBucketTemplate
+from aws_frederick_ad import AWSFrederickADTemplate
 import troposphere.ec2 as ec2
 import boto.vpc
 import boto
@@ -85,6 +86,16 @@ class AWSFrederickEnv(NetworkBase):
                 SecurityGroupIngress=[]
                 )
         )
+
+        if self.config.get('aws_frederick').get('simple_ads'):
+            aws_frederick_ads_template = AWSFrederickADTemplate(
+                env_name,
+                region,
+                cidr_range,
+                aws_frederick_config
+            )
+
+            self.add_child_template(aws_frederick_ads_template)
 
         if self.config.get('aws_frederick').get('rds'):
             aws_frederick_rds_template = AWSFrederickRdsTemplate(
