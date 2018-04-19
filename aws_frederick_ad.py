@@ -2,6 +2,8 @@ from aws_frederick_common import AWSFrederickCommonTemplate
 from troposphere import GetAtt, Join, Output
 from troposphere import Parameter, Ref, Template
 from troposphere import directoryservice
+from troposphere.ec2 import DHCPOptions
+from troposphere.ec2 import VPCDHCPOptionsAssociation
 import boto3
 import base64
 
@@ -49,7 +51,7 @@ class AWSFrederickADTemplate(AWSFrederickCommonTemplate):
         """
         print "Creating Simple AD: %s" % name
 
-        self.add_resource(directoryservice.SimpleAD(
+        simple_ad = directoryservice.SimpleAD(
             name,
             CreateAlias=True,
             Name=hosted_zone[:-1],
@@ -63,31 +65,16 @@ class AWSFrederickADTemplate(AWSFrederickCommonTemplate):
                 ],
                 VpcId=Ref(self.parameters.get('vpcId'))
             )
-        ))
+        )
+        self.add_resource(simple_ad)
 
-# class SimpleAD(AWSObject):
-#     resource_type = "AWS::DirectoryService::SimpleAD"
-#
-#     props = {
-#         'CreateAlias': (boolean, False),
-#         'Description': (basestring, False),
-#         'EnableSso': (boolean, False),
-#         'Name': (basestring, True),
-#         'Password': (basestring, True),
-#         'ShortName': (basestring, False),
-#         'Size': (basestring, True),
-#         'VpcSettings': (VpcSettings, True),
-#     }
+        dhcp_opts = DHCPOptions(name + 'dhcpopts',
+                                DomainName=hosted_zone[:-1],
+                                DomainNameServers=GetAtt(simple_ad, 'DnsIpAddresses'),
+                                NetbiosNameServers=GetAtt(simple_ad, 'DnsIpAddresses'))
 
-# "myDirectory" : {
-#   "Type" : "AWS::DirectoryService::SimpleAD",
-#   "Properties" : {
-#     "Name" : "corp.example.com",
-#     "Password" : { "Ref" : "SimpleADPW" },
-#     "Size" : "Small",
-#     "VpcSettings" : {
-#       "SubnetIds" : [ { "Ref" : "subnetID1" }, { "Ref" : "subnetID2" } ],
-#       "VpcId" : { "Ref" : "vpcID" }
-#     }
-#   }
-# }
+        self.add_resource(dhcp_opts)
+
+        self.add_resource(VPCDHCPOptionsAssociation(name + 'dhcpoptsassociation',
+                                                    DhcpOptionsId=Ref(dhcp_opts),
+                                                    VpcId=Ref(self.parameters.get('vpcId'))))
