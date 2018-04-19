@@ -4,11 +4,11 @@ setup(
     name="AWS-Frederick",
     version="0.1",
     install_requires=[
-        'cfn-environment-base==0.9.15',
-        'troposphere==1.9.2'
+        'cfn-environment-base==0.9.22',
+        'troposphere==2.2.1'
     ],
     dependency_links=[
-        'https://github.com/ion-channel/cloudformation-environmentbase/archive/0.9.15.zip#egg=cfn-environment-base-0.9.15'
+        'https://github.com/AWSFrederick/cloudformation-environmentbase/archive/0.9.22.zip#egg=cfn-environment-base-0.9.22'
     ],
     include_package_data=True,
     zip_safe=True

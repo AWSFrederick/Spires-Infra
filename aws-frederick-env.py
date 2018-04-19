@@ -15,6 +15,7 @@ Options:
 
 from environmentbase.networkbase import NetworkBase
 from aws_frederick_ec2 import AWSFrederickEC2Template
+from aws_frederick_ecs import AWSFrederickECSTemplate
 from aws_frederick_rds import AWSFrederickRdsTemplate
 from aws_frederick_bucket import AWSFrederickBucketTemplate
 from aws_frederick_ad import AWSFrederickADTemplate
@@ -116,6 +117,16 @@ class AWSFrederickEnv(NetworkBase):
             )
 
             self.add_child_template(aws_frederick_ec2_template)
+
+        if self.config.get('aws_frederick').get('ecs'):
+            aws_frederick_ecs_template = AWSFrederickECSTemplate(
+                env_name,
+                region,
+                cidr_range,
+                aws_frederick_config
+            )
+
+            self.add_child_template(aws_frederick_ecs_template)
 
         if self.config.get('aws_frederick').get('buckets'):
             aws_frederick_bucket_template = AWSFrederickBucketTemplate(
