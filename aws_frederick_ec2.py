@@ -1,10 +1,11 @@
 from aws_frederick_common import AWSFrederickCommonTemplate
 from troposphere import Ref, GetAtt, Base64, Join, Output, Template
 from troposphere.policies import UpdatePolicy, AutoScalingRollingUpdate
-import troposphere.elasticloadbalancing as elb
+import troposphere.elasticloadbalancingv2 as alb
 import troposphere.constants as tpc
 import troposphere.autoscaling as autoscaling
 import troposphere.cloudwatch as cloudwatch
+import troposphere.route53 as r53
 
 
 class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
@@ -53,7 +54,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             "Security Group for EC2",
             'vpcId',
             cidr,
-            [{"80": "80"}]
+            [{"443": "443"}]
         )
 
         self.public_lb_security_group = self.add_sg_with_cidr_port_list(
@@ -66,26 +67,35 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
 
         name = self.env_name.replace('-', '')
 
-        ## Todo: add elb to dns for awsfred.patrickpierson.us
-        public_elb = self.add_elb("ELB",
-            [
-              {
-                'elb_port': 443,
-                'elb_protocol': 'HTTPS',
-                'instance_port': 80,
-                'instance_protocol': 'HTTP'
-              }
-            ],
-            health_check_protocol='HTTP',
-            health_check_port=80,
-            health_check_path='/',
-            security_groups=[self.public_lb_security_group])
+        public_subnet_count = len(self._subnets.get('public').get('public'))
+        public_subnets = [{'Ref': x} for x in ["publicAZ%d" % n for n in range(0, public_subnet_count)]]
+        public_alb = self.add_resource(alb.LoadBalancer(
+            "PublicALB",
+            Scheme='internet-facing',
+            Subnets=public_subnets,
+            SecurityGroups=[Ref(sg) for sg in [self.public_lb_security_group]]
+        ))
 
-        public_elb.Listeners[0].SSLCertificateId = 'arn:aws:acm:us-east-1:422548007577:certificate/4d2f2450-7616-4daa-b7ed-c1fd2d53df90'
+        target_group = self.add_resource(alb.TargetGroup(
+            "AppTargetGroup443",
+            Port=443,
+            Protocol="HTTPS",
+            VpcId=self.vpc_id
+        ))
+        certificate = 'arn:aws:acm:us-east-1:422548007577:certificate/d9b8fbd2-13bb-4d6e-aba4-53061b1580f9'
+        alb_ssl_listener = self.add_resource(alb.Listener(
+            "ALBListner",
+            Port=443,
+            Certificates=[alb.Certificate(CertificateArn=certificate)],
+            Protocol="HTTPS",
+            DefaultActions=[alb.Action(
+                Type="forward",
+                TargetGroupArn=Ref(target_group))],
+            LoadBalancerArn=Ref(public_alb)
+        ))
 
-        public_dns = self.add_elb_dns_alias(public_elb, 'api', 'mapfrederick.city.')
+        # self.add_elb_dns_alias(public_alb, '', hosted_zone)
 
-        # Add policies
         policies = ['cloudwatchlogs']
         policies_for_profile = [self.get_policy(policy, 'EC2') for policy in policies]
 
@@ -94,7 +104,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             min_size=asg_size,
             max_size=6,
             ami_name=ami_name,
-            load_balancer=public_elb,
+            # load_balancer=public_elb,
             instance_profile=self.add_instance_profile(name, policies_for_profile, name),
             instance_type=instance_type,
             security_groups=['commonSecurityGroup', Ref(self.internal_security_group)],
@@ -110,21 +120,10 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             ),
             user_data=Base64(Join('', [
                 '#!/bin/bash\n',
-                'yum install python27-pip git nginx awslogs gcc python27-devel postgresql95-devel -y\n',
-                'wget https://s3.amazonaws.com/files.mapfrederick.city/awslogs-append.conf\n',
-                'cat awslogs-append.conf >> /etc/awslogs/awslogs.conf\n',
-                'service awslogs start\n',
-                'chkconfig awslogs on\n',
-                'git clone https://github.com/AWSFrederick/Spires-backend.git app\n',
-                'cd app\n',
-                'mv awsfred.conf /etc/nginx/conf.d/awsfred.conf\n',
-                'service nginx start\n'
-                'virtualenv env\n',
-                'source ./env/bin/activate\n',
-                'pip install -r requirements.txt\n',
-                'python manage.py migrate\n',
-                'gunicorn spires.wsgi:application -b 0.0.0.0:5000 --keep-alive 60 &\n',
+                'echo Good to go'
             ])))
+
+        asg.resource['Properties']['TargetGroupARNs'] = [Ref(target_group)]
 
         # Cluster Memory Scaling policies
         asg_scale_up_policy = self.add_resource(
@@ -148,7 +147,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                 Statistic='Average',
                 Namespace='AWS/ELB',
                 AlarmDescription=name + 'LatencyHigh',
-                Dimensions=[cloudwatch.MetricDimension(Name='LoadBalancerName', Value=Ref(public_elb))],
+                Dimensions=[cloudwatch.MetricDimension(Name='LoadBalancerName', Value=Ref(public_alb))],
                 Threshold='6',
                 AlarmActions=[
                   Ref(asg_scale_up_policy),

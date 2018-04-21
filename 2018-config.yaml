@@ -19,7 +19,7 @@ aws_frederick:
   #       FAKEENV2: 'testingmoreenvs'
   ec2:
    instance_size: t2.medium
-   ami_id: amazonLinuxAmiId
+   ami_id: nextcloud
    asg_size: 1
   buckets:
     - name: awsfrednextcloudstorage
