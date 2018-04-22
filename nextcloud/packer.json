@@ -1,0 +1,62 @@
+{
+  "variables": {
+    "AWS_ACCESS_KEY_ID": "",
+    "AWS_SECRET_ACCESS_KEY": "",
+    "region": "us-east-1"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `AWS_ACCESS_KEY_ID`}}",
+    "secret_key": "{{user `AWS_SECRET_ACCESS_KEY`}}",
+    "region": "us-east-1",
+    "source_ami_filter": {
+      "filters": {
+      "virtualization-type": "hvm",
+      "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+      "root-device-type": "ebs"
+      },
+      "owners": ["099720109477"],
+      "most_recent": true
+    },
+    "instance_type": "t2.medium",
+    "ssh_username": "ubuntu",
+    "ami_name": "nextcloud {{timestamp}}"
+  }],
+  "provisioners": [
+        {
+            "type": "shell",
+	    "execute_command": "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+            "script": "./setup-script.sh"
+        },
+        {
+            "type": "file",
+            "source": "./nextcloud.conf",
+            "destination": "/tmp/nextcloud.conf"
+        },
+		  {
+            "type": "file",
+            "source": "./config.json",
+            "destination": "/tmp/config.json"
+        },
+
+        {
+            "type": "shell",
+	    "execute_command": "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+            "inline":[
+            	"mv /tmp/config.json /var/www/nextcloud/",
+            	"cd /var/www/nextcloud && sudo -u www-data php occ config:import config.json",
+            	"mv /tmp/nextcloud.conf /etc/apache2/sites-available/nextcloud.conf",
+            	"ln -s /etc/apache2/sites-available/nextcloud.conf /etc/apache2/sites-enabled/nextcloud.conf",
+            	"a2enmod rewrite",
+            	"a2enmod headers",
+            	"a2enmod env",
+            	"a2enmod dir",
+            	"a2enmod mime",
+            	"a2enmod ssl",
+            	"a2ensite default-ssl",
+            	"service apache2 restart",
+            	"chown -R www-data:www-data /var/www/nextcloud/"
+            ]
+        }
+     ]
+}
