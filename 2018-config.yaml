@@ -32,6 +32,13 @@ aws_frederick:
      storage: "20"
      db_instance_type: "db.t2.micro"
      multiaz: False
+   - name: "databasefsfred"
+     engine: "mariadb"
+     username: "awsfred"
+     password: "AQECAHjszbs5uVI7m3fRML/qYWtXh+qnvbk26YIhu4jHW5ZWKQAAAHwwegYJKoZIhvcNAQcGoG0wawIBADBmBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDJz9xTriJTlgTbLAjwIBEIA5eOUDPhUJT286ecPCLGy5fZV+qLI06r8j/Os9tBsi2axzDweE20ThDnIaRqZ7ylDGNShA8MuSjJYv"
+     storage: "20"
+     db_instance_type: "db.t2.micro"
+     multiaz: False
 boto:
   aws_access_key_id:
   aws_secret_access_key:

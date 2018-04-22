@@ -54,7 +54,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             "Security Group for EC2",
             'vpcId',
             cidr,
-            [{"443": "443"}]
+            [{"443": "443"}, {"80": "80"}]
         )
 
         self.public_lb_security_group = self.add_sg_with_cidr_port_list(
@@ -77,9 +77,9 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
         ))
 
         target_group = self.add_resource(alb.TargetGroup(
-            "AppTargetGroup443",
-            Port=443,
-            Protocol="HTTPS",
+            "AppTargetGroup80",
+            Port=80,
+            Protocol="HTTP",
             VpcId=self.vpc_id
         ))
         certificate = 'arn:aws:acm:us-east-1:422548007577:certificate/d9b8fbd2-13bb-4d6e-aba4-53061b1580f9'

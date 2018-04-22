@@ -4,6 +4,6 @@
         "centOS65AmiId": "ami-8997afe0",
         "ubuntu1404LtsAmiId": "ami-018c9568",
         "amazonLinuxAmiId": "ami-0b33d91d",
-        "nextcloud": "ami-3b993144"
+        "nextcloud": "ami-177dd668"
     }
 }
