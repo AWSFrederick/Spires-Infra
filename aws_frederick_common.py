@@ -7,7 +7,7 @@ import troposphere.route53 as route53
 import troposphere.kms as kms
 from troposphere import elasticache
 import troposphere.cloudwatch as cloudwatch
-from troposphere.rds import DBInstance, DBSubnetGroup
+from troposphere.rds import DBInstance, DBSubnetGroup, Tags
 from troposphere import Ref, GetAtt, Join
 from environmentbase.template import Template
 import awacs.iam
@@ -997,7 +997,9 @@ class AWSFrederickCommonTemplate(Template):
             BackupRetentionPeriod=7,
             DBParameterGroupName=Ref(parameter_group_name),
             VPCSecurityGroups=[Ref(rds_security_group)],
-            MultiAZ=multiaz_status)
+            MultiAZ=multiaz_status,
+            Tags=Tags(Name=name)
+            )
 
         if encrypt:
             rds_database.properties['KmsKeyId'] = encrypt
