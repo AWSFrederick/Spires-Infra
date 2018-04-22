@@ -1,0 +1,312 @@
+{
+    "system": {
+        "instanceid": "ocja8529g5cb",
+        "passwordsalt": "raY6LgbWN2nguGBuTPLlwr3vUEnUjL",
+        "secret": "In7itBAmvD\/Jl9hOGJOVwShlzP8slzUxoLuXejK3ZGSMXVC3",
+        "trusted_domains": [
+            "ec2-54-86-136-25.compute-1.amazonaws.com",
+            "54.88.207.195",
+            "filesharefrederick.net"
+        ],
+        "datadirectory": "\/var\/www\/nextcloud\/data",
+        "overwrite.cli.url": "https:\/\/ec2-54-86-136-25.compute-1.amazonaws.com\/nextcloud",
+        "dbtype": "mysql",
+        "version": "13.0.1.1",
+        "dbname": "nextcloud",
+        "dbhost": "armekh860d7bzp.c5xhgy8yojo5.us-east-1.rds.amazonaws.com:3306",
+        "dbport": "",
+        "dbtableprefix": "oc_",
+        "dbuser": "nextclouduser",
+        "dbpassword": "nextcloud!!",
+        "installed": true,
+        "maintenance": false,
+        "ldapIgnoreNamingRules": false,
+        "ldapProviderFactory": "\\OCA\\User_LDAP\\LDAPProviderFactory"
+    },
+    "apps": {
+        "activity": {
+            "enabled": "yes",
+            "installed_version": "2.6.1",
+            "types": "filesystem"
+        },
+        "admin_audit": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": "logging"
+        },
+        "backgroundjob": {
+            "lastjob": "5"
+        },
+        "bruteforcesettings": {
+            "enabled": "yes",
+            "installed_version": "1.0.3",
+            "types": ""
+        },
+        "comments": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": "logging"
+        },
+        "core": {
+            "default_encryption_module": "OC_DEFAULT_MODULE",
+            "installed.bundles": "[\"CoreBundle\"]",
+            "installedat": "1524292223.9313",
+            "lastcron": "1524431411",
+            "lastupdateResult": "[]",
+            "lastupdatedat": "1524425810",
+            "oc.integritycheck.checker": "[]",
+            "public_files": "files_sharing\/public.php",
+            "public_webdav": "dav\/appinfo\/v1\/publicwebdav.php",
+            "scss.variables": "d5a53762adc44948f6ca620386ffa35a",
+            "vendor": "nextcloud"
+        },
+        "dav": {
+            "enabled": "yes",
+            "installed_version": "1.4.6",
+            "types": "filesystem"
+        },
+        "encryption": {
+            "enabled": "yes",
+            "encryptHomeStorage": "1",
+            "installed_version": "2.0.0",
+            "masterKeyId": "master_556ce396",
+            "publicShareKeyId": "pubShare_9985a04e",
+            "recoveryKeyId": "recoveryKey_9985a04e",
+            "types": "filesystem"
+        },
+        "federatedfilesharing": {
+            "enabled": "yes",
+            "installed_version": "1.3.1",
+            "types": ""
+        },
+        "federation": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": "authentication"
+        },
+        "files": {
+            "cronjob_scan_files": "500",
+            "enabled": "yes",
+            "installed_version": "1.8.0",
+            "types": "filesystem"
+        },
+        "files_external": {
+            "allow_user_mounting": "yes",
+            "enabled": "yes",
+            "installed_version": "1.4.1",
+            "types": "filesystem",
+            "user_mounting_backends": "amazons3"
+        },
+        "files_pdfviewer": {
+            "enabled": "yes",
+            "installed_version": "1.2.1",
+            "types": ""
+        },
+        "files_sharing": {
+            "enabled": "yes",
+            "installed_version": "1.5.0",
+            "types": "filesystem"
+        },
+        "files_texteditor": {
+            "enabled": "yes",
+            "installed_version": "2.5.1",
+            "types": ""
+        },
+        "files_trashbin": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": "filesystem"
+        },
+        "files_versions": {
+            "enabled": "yes",
+            "installed_version": "1.6.0",
+            "types": "filesystem"
+        },
+        "files_videoplayer": {
+            "enabled": "yes",
+            "installed_version": "1.2.0",
+            "types": ""
+        },
+        "firstrunwizard": {
+            "enabled": "yes",
+            "installed_version": "2.2.1",
+            "types": "logging"
+        },
+        "gallery": {
+            "enabled": "yes",
+            "installed_version": "18.0.0",
+            "types": ""
+        },
+        "logreader": {
+            "enabled": "yes",
+            "installed_version": "2.0.0",
+            "ocsid": "170871",
+            "types": ""
+        },
+        "lookup_server_connector": {
+            "enabled": "yes",
+            "installed_version": "1.1.0",
+            "types": "authentication"
+        },
+        "nextcloud_announcements": {
+            "enabled": "yes",
+            "installed_version": "1.2.0",
+            "pub_date": "Sat, 10 Dec 2016 00:00:00 +0100",
+            "types": "logging"
+        },
+        "notifications": {
+            "enabled": "yes",
+            "installed_version": "2.1.2",
+            "types": "logging"
+        },
+        "oauth2": {
+            "enabled": "yes",
+            "installed_version": "1.1.0",
+            "types": "authentication"
+        },
+        "password_policy": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": ""
+        },
+        "provisioning_api": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": "prevent_group_restriction"
+        },
+        "serverinfo": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": ""
+        },
+        "sharebymail": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": "filesystem"
+        },
+        "survey_client": {
+            "enabled": "yes",
+            "installed_version": "1.1.0",
+            "types": ""
+        },
+        "systemtags": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": "logging"
+        },
+        "theming": {
+            "backgroundMime": "backgroundColor",
+            "cachebuster": "16",
+            "color": "#b1664a",
+            "enabled": "yes",
+            "installed_version": "1.4.1",
+            "logoMime": "image\/jpeg",
+            "name": "City Of Frederick File Share",
+            "slogan": "Spires R Us",
+            "types": "logging",
+            "url": "https:\/\/filesharefrederick.net"
+        },
+        "twofactor_backupcodes": {
+            "enabled": "yes",
+            "installed_version": "1.2.3",
+            "types": ""
+        },
+        "updatenotification": {
+            "enabled": "yes",
+            "files_pdfviewer": "1.2.1",
+            "installed_version": "1.3.0",
+            "types": "",
+            "update_check_errors": "0"
+        },
+        "user_external": {
+            "enabled": "yes",
+            "installed_version": "0.4",
+            "types": "authentication,prelogin"
+        },
+        "user_ldap": {
+            "_lastChange": "1524431212",
+            "enabled": "yes",
+            "has_memberof_filter_support": "1",
+            "installed_version": "1.3.1",
+            "ldap_agent_password": "QnVpbGRpbmdDb29sNzIhIQ==",
+            "ldap_base": "DC=filesharefrederick,DC=net",
+            "ldap_base_groups": "DC=filesharefrederick,DC=net",
+            "ldap_base_users": "DC=filesharefrederick,DC=net",
+            "ldap_cache_ttl": "600",
+            "ldap_configuration_active": "1",
+            "ldap_display_name": "displayname",
+            "ldap_dn": "CN=NextCloud Admin,CN=Users,DC=filesharefrederick,DC=net",
+            "ldap_experienced_admin": "0",
+            "ldap_group_filter": "(&(|(objectclass=group))(|(cn=TestGroup1)(cn=TestGroup2)(cn=Users)))",
+            "ldap_group_member_assoc_attribute": "member",
+            "ldap_groupfilter_groups": "TestGroup1\nTestGroup2\nUsers",
+            "ldap_groupfilter_objectclass": "group",
+            "ldap_host": "filesharefrederick.net",
+            "ldap_login_filter": "(&(objectclass=user)(objectcategory=person)(sAMAccountName=%uid))",
+            "ldap_login_filter_mode": "1",
+            "ldap_port": "389",
+            "ldap_tls": "0",
+            "ldap_user_filter_mode": "1",
+            "ldap_userfilter_groups": "Users",
+            "ldap_userfilter_objectclass": "user",
+            "ldap_userlist_filter": "(&(objectCategory=person)(objectClass=user))",
+            "s01_lastChange": "1524295216",
+            "s01has_memberof_filter_support": "0",
+            "s01home_folder_naming_rule": "",
+            "s01last_jpegPhoto_lookup": "0",
+            "s01ldap_agent_password": "",
+            "s01ldap_attributes_for_group_search": "",
+            "s01ldap_attributes_for_user_search": "",
+            "s01ldap_backup_host": "",
+            "s01ldap_backup_port": "",
+            "s01ldap_base": "",
+            "s01ldap_base_groups": "",
+            "s01ldap_base_users": "",
+            "s01ldap_cache_ttl": "600",
+            "s01ldap_configuration_active": "0",
+            "s01ldap_default_ppolicy_dn": "",
+            "s01ldap_display_name": "displayName",
+            "s01ldap_dn": "",
+            "s01ldap_dynamic_group_member_url": "",
+            "s01ldap_email_attr": "",
+            "s01ldap_experienced_admin": "0",
+            "s01ldap_expert_username_attr": "",
+            "s01ldap_expert_uuid_group_attr": "",
+            "s01ldap_expert_uuid_user_attr": "",
+            "s01ldap_gid_number": "gidNumber",
+            "s01ldap_group_display_name": "cn",
+            "s01ldap_group_filter": "",
+            "s01ldap_group_filter_mode": "0",
+            "s01ldap_group_member_assoc_attribute": "uniqueMember",
+            "s01ldap_groupfilter_groups": "",
+            "s01ldap_groupfilter_objectclass": "",
+            "s01ldap_host": "",
+            "s01ldap_login_filter": "",
+            "s01ldap_login_filter_mode": "0",
+            "s01ldap_loginfilter_attributes": "",
+            "s01ldap_loginfilter_email": "0",
+            "s01ldap_loginfilter_username": "1",
+            "s01ldap_nested_groups": "0",
+            "s01ldap_override_main_server": "",
+            "s01ldap_paging_size": "500",
+            "s01ldap_port": "",
+            "s01ldap_quota_attr": "",
+            "s01ldap_quota_def": "",
+            "s01ldap_tls": "0",
+            "s01ldap_turn_off_cert_check": "0",
+            "s01ldap_turn_on_pwd_change": "0",
+            "s01ldap_user_display_name_2": "",
+            "s01ldap_user_filter_mode": "0",
+            "s01ldap_userfilter_groups": "",
+            "s01ldap_userfilter_objectclass": "",
+            "s01ldap_userlist_filter": "",
+            "s01use_memberof_to_detect_membership": "1",
+            "types": "authentication"
+        },
+        "workflowengine": {
+            "enabled": "yes",
+            "installed_version": "1.3.0",
+            "types": "filesystem"
+        }
+    }
+}
