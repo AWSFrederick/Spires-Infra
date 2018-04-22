@@ -681,7 +681,7 @@ class AWSFrederickCommonTemplate(Template):
                         Name=name,
                         Type='A',
                         AliasTarget=route53.AliasTarget(
-                            GetAtt(elb, "CanonicalHostedZoneNameID"),
+                            GetAtt(elb, "CanonicalHostedZoneID"),
                             GetAtt(elb, "DNSName")
                         )
                     )

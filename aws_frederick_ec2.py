@@ -94,8 +94,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             LoadBalancerArn=Ref(public_alb)
         ))
 
-        # self.add_elb_dns_alias(public_alb, '', hosted_zone)
-
+        self.add_elb_dns_alias(public_alb, '', hosted_zone)
         policies = ['cloudwatchlogs']
         policies_for_profile = [self.get_policy(policy, 'EC2') for policy in policies]
 
