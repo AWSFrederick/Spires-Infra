@@ -80,7 +80,10 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             "AppTargetGroup80",
             Port=80,
             Protocol="HTTP",
-            VpcId=self.vpc_id
+            VpcId=self.vpc_id,
+            TargetGroupAttributes=[alb.TargetGroupAttribute(Key="stickiness.enabled", Value='true'),
+                                   alb.TargetGroupAttribute(Key="stickiness.type", Value='lb_cookie'),
+                                   alb.TargetGroupAttribute(Key="stickiness.lb_cookie.duration_seconds", Value='3600')]
         ))
         certificate = 'arn:aws:acm:us-east-1:422548007577:certificate/d9b8fbd2-13bb-4d6e-aba4-53061b1580f9'
         alb_ssl_listener = self.add_resource(alb.Listener(
