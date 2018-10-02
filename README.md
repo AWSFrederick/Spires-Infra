@@ -9,7 +9,7 @@ Create:
 
 Deploy:
 
-> python aws-frederickenv-py deploy --config-file 2018-config.yaml
+> python aws-frederick-env.py deploy --config-file 2018-config.yaml
 
 #### 2017
 > export AWS_PROFILE=aws-frederick
