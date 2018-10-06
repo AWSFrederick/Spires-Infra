@@ -1,6 +1,15 @@
 ## AWS Frederick Infrastructure Code
 ### City on a Cloud Challenge
 
+#### Setup
+
+> pipenv --two
+
+> pipenv install
+
+> pipenv run python setup.py install
+
+
 #### 2018
 
 Create:
