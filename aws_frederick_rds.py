@@ -14,7 +14,7 @@ class AWSFrederickRdsTemplate(AWSFrederickCommonTemplate):
 
     # Collect all the values we need to assemble our RDS stack
     def __init__(self, env_name, region, cidr_range, aws_frederick_config):
-        super(AWSFrederickRdsTemplate, self).__init__('AWSFrederickRds')
+        super(AWSFrederickRdsTemplate, self).__init__(env_name + 'Rds')
 
         self.env_name = env_name
         self.region = region
@@ -22,7 +22,7 @@ class AWSFrederickRdsTemplate(AWSFrederickCommonTemplate):
         self.config = aws_frederick_config
 
     def build_hook(self):
-        print "Building Template for AWS Frederick Rds"
+        print "Building Template for %s Rds" % self.env_name
 
         hosted_zone_name = self.config.get('hosted_zone')
 
@@ -79,7 +79,7 @@ class AWSFrederickRdsTemplate(AWSFrederickCommonTemplate):
             group_parameters = {}
         if engine == 'mariadb':
             rds_port = 3306
-            family = 'mariadb10.1'
+            family = 'mariadb10.0'
             group_parameters = {}
 
         rds_security_group = self.add_simple_sg_with_cidr(name, 'RDSSecurityGroup' + name, 'vpcId', cidr, rds_port, rds_port, 'tcp')

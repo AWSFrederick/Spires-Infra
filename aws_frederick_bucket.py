@@ -15,7 +15,7 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
     """
 
     def __init__(self, env_name, region, cidr_range, aws_frederick_config):
-        super(AWSFrederickBucketTemplate, self).__init__('AWSFrederickBucket')
+        super(AWSFrederickBucketTemplate, self).__init__(env_name + 'Bucket')
 
         self.env_name = env_name
         self.region = region
@@ -23,7 +23,7 @@ class AWSFrederickBucketTemplate(AWSFrederickCommonTemplate):
         self.config = aws_frederick_config
 
     def build_hook(self):
-        print "Building Template for AWS Frederick Bucket"
+        print "Building Template for %s Bucket" % self.env_name
 
         public_hosted_zone_name = self.config.get('public_hosted_zone')
         hosted_zone_name = self.config.get('hosted_zone')
