@@ -15,7 +15,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
 
     # Collect all the values we need to assemble our SuperBowlOnARoll stack
     def __init__(self, env_name, region, cidr_range, aws_frederick_config):
-        super(AWSFrederickEC2Template, self).__init__('AWSFrederickEC2')
+        super(AWSFrederickEC2Template, self).__init__(env_name + 'EC2')
 
         self.env_name = env_name
         self.region = region
@@ -23,7 +23,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
         self.config = aws_frederick_config
 
     def build_hook(self):
-        print "Building Template for AWS Frederick EC2"
+        print "Building Template for %s EC2" % self.env_name
 
         hosted_zone_name = self.config.get('hosted_zone')
         ec2_config = self.config.get('ec2')
@@ -32,11 +32,12 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                 ec2_config.get('ami_id'),
                 ec2_config.get('instance_size'),
                 ec2_config.get('asg_size'),
+                ec2_config.get('acm_cert'),
                 self.cidr_range,
                 hosted_zone_name
             )
 
-    def add_ec2(self, ami_name, instance_type, asg_size, cidr, hosted_zone):
+    def add_ec2(self, ami_name, instance_type, asg_size, acm_cert, cidr, hosted_zone):
         """
         Helper method creates ingress given a source cidr range and a set of
         ports
@@ -85,7 +86,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                                    alb.TargetGroupAttribute(Key="stickiness.type", Value='lb_cookie'),
                                    alb.TargetGroupAttribute(Key="stickiness.lb_cookie.duration_seconds", Value='3600')]
         ))
-        certificate = 'arn:aws:acm:us-east-1:422548007577:certificate/d9b8fbd2-13bb-4d6e-aba4-53061b1580f9'
+        certificate = acm_cert
         alb_ssl_listener = self.add_resource(alb.Listener(
             "ALBListner",
             Port=443,
