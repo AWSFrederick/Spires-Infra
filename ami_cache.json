@@ -3,7 +3,8 @@
         "natAmiId": "ami-31962127",
         "centOS65AmiId": "ami-8997afe0",
         "ubuntu1404LtsAmiId": "ami-018c9568",
-        "amazonLinuxAmiId": "ami-0b33d91d",
+        #"amazonLinuxAmiId": "ami-0ff8a91507f77f867",
+        "amazonLinuxAmiId": "ami-b377dccc",
         "nextcloud": "ami-177dd668"
     }
 }
