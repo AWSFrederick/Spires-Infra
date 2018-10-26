@@ -1,11 +1,13 @@
 from aws_frederick_common import AWSFrederickCommonTemplate
-from troposphere import Ref, GetAtt, Base64, Join, Output, Template
+from troposphere import Ref, GetAtt, Base64, Join, Output, Template, Tags
 from troposphere.policies import UpdatePolicy, AutoScalingRollingUpdate
 import troposphere.elasticloadbalancingv2 as alb
 import troposphere.constants as tpc
 import troposphere.autoscaling as autoscaling
 import troposphere.cloudwatch as cloudwatch
 import troposphere.route53 as r53
+from troposphere.ec2 import SecurityGroup, SecurityGroupRule
+from troposphere.efs import FileSystem, MountTarget
 
 
 class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
@@ -69,7 +71,9 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
         name = self.env_name.replace('-', '')
 
         public_subnet_count = len(self._subnets.get('public').get('public'))
+        private_subnet_count = len(self._subnets.get('private').get('private'))
         public_subnets = [{'Ref': x} for x in ["publicAZ%d" % n for n in range(0, public_subnet_count)]]
+        private_subnets = [ x for x in ["privateAZ%d" % n for n in range(0, private_subnet_count)]]
         public_alb = self.add_resource(alb.LoadBalancer(
             "PublicALB",
             Scheme='internet-facing',
@@ -123,7 +127,7 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
             ),
             user_data=Base64(Join('', [
                 '#!/bin/bash\n',
-                'echo Good to go'
+                'echo Good to go\n',
             ])))
 
         asg.resource['Properties']['TargetGroupARNs'] = [Ref(target_group)]
@@ -158,3 +162,36 @@ class AWSFrederickEC2Template(AWSFrederickCommonTemplate):
                 ]
             )
         )
+
+        efs_security_group_rule = SecurityGroupRule(
+            IpProtocol='tcp',
+            FromPort='2049',
+            ToPort='2049',
+            SourceSecurityGroupId=Ref(self.internal_security_group)
+        )
+
+        efs_security_group = SecurityGroup(
+            "SecurityGroup",
+            SecurityGroupIngress=[efs_security_group_rule],
+            VpcId=Ref('vpcId'),
+            GroupDescription="Allow NFS over TCP"
+        )
+        self.add_resource(efs_security_group)
+
+        tags = Tags(Name='EFSFileSystem')
+        efs_file_system = FileSystem(
+            "EFSFileSystem",
+            FileSystemTags=tags
+        )
+        self.add_resource(efs_file_system)
+
+        count = 0
+        for i in private_subnets:
+            efs_mount_target = MountTarget(
+                "EFSMountTarget%s" % count,
+                FileSystemId=Ref(efs_file_system),
+                SecurityGroups=[Ref(efs_security_group)],
+                SubnetId=Ref(i)
+            )
+            count += 1
+            self.add_resource(efs_mount_target)
